@@ -1,24 +1,12 @@
----
-title: "Reproducible Research - Course Project 1"
-author : Mathias Stein
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research - Course Project 1
+Mathias Stein  
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
-library(dplyr)
-library(ggplot2)
-library(lattice)
-library(knitr)
-Sys.setlocale("LC_ALL","English")
-```
 
 ## Total number of steps taken per day
 
-```{r}
+
+```r
 activity <- read.csv("activity.csv", sep = ",")
 merged_by_day <- activity[which(activity$steps >= 0), ]
 merged_by_day <- merged_by_day %>% group_by(date) %>% summarise(steps = sum(steps))
@@ -30,21 +18,26 @@ ggplot(merged_by_day, aes(x = date, y = steps)) +
   theme_bw()
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+
 Mean of the total number of steps taken per day :
 
-```{r echo=FALSE}
-mean(merged_by_day$steps, na.rm = TRUE)
+
+```
+## [1] 10766.19
 ```
 
 Median of the total number of steps taken per day :
 
-```{r echo=FALSE}
-median(merged_by_day$steps, na.rm = TRUE)
+
+```
+## [1] 10765
 ```
 
 ## Average daily activity pattern
 
-```{r}
+
+```r
 activity <- read.csv("activity.csv", sep = ",")
 merged_by_interval <- activity[which(activity$steps >= 0), ]
 merged_by_interval <- merged_by_interval %>% group_by(interval) %>% summarise(steps = sum(steps))
@@ -56,24 +49,28 @@ ggplot(merged_by_interval, aes(x = interval, y = steps)) +
   theme_bw()
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
 The 5-minute interval, on average across all the days in the dataset, which contains the maximum number of steps is :
 
-```{r echo=FALSE}
-merged_by_interval[order(-merged_by_interval$steps),][1,]$interval
+
+```
+## [1] 835
 ```
 
 ## Imputing missing values
 
 Total number of missing values in the dataset
 
-```{r echo=FALSE}
-activity <- read.csv("activity.csv", sep = ",")
-sum(is.na(activity$steps))
+
+```
+## [1] 2304
 ```
 
 Those missing values will be filled by the mean for the 5-minute interval for all the data collected. Here is the code :
 
-```{r}
+
+```r
 activity <- read.csv("activity.csv", sep = ",")
 clean_activity <- activity
 
@@ -86,34 +83,28 @@ for (i in which(sapply(clean_activity, is.numeric))) {
 
 Here is the new histogram with missing values replaced by mean :
 
-```{r echo=FALSE}
-merged_by_day <- clean_activity[which(activity$steps >= 0), ]
-merged_by_day <- merged_by_day %>% group_by(date) %>% summarise(steps = sum(steps))
-merged_by_day <- as.data.frame(merged_by_day)
-merged_by_day$date <- as.Date(merged_by_day$date)
-
-ggplot(merged_by_day, aes(x = date, y = steps)) + 
-  geom_bar(stat = "identity") +
-  theme_bw()
-```
+![](PA1_template_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
 
 New Mean of the total number of steps taken per day :
 
-```{r echo=FALSE}
-mean(merged_by_day$steps, na.rm = TRUE)
+
+```
+## [1] 10766.19
 ```
 
 New Median of the total number of steps taken per day :
 
-```{r echo=FALSE}
-median(merged_by_day$steps, na.rm = TRUE)
+
+```
+## [1] 10765
 ```
 
 We can see that both histogram are the same. Inputting values based on the mean will necessarly produce the same mean.
 
 ## Differences in activity patterns between weekdays and weekends
 
-```{r}
+
+```r
 clean_activity$date <- as.Date(clean_activity$date)
 clean_activity$week = ifelse(weekdays(clean_activity$date) == "Saturday" | weekdays(clean_activity$date) == "Sunday", "weekend", "weekday")
 clean_activity$week = as.factor(clean_activity$week)
@@ -121,3 +112,5 @@ merged_by_interval <- clean_activity %>% group_by(interval, week) %>% summarise(
 merged_by_interval <- as.data.frame(merged_by_interval)
 xyplot(steps ~ interval | week, data = merged_by_interval, layout = c(1,2), type = "l")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png)<!-- -->

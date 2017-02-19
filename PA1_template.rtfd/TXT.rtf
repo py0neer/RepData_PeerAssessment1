@@ -1,0 +1,124 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf470
+{\fonttbl\f0\fnil\fcharset0 HelveticaNeue-Medium;\f1\fnil\fcharset0 HelveticaNeue-MediumItalic;\f2\fmodern\fcharset0 Courier;
+\f3\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;\red38\green38\blue38;\red242\green242\blue242;\red255\green255\blue255;
+}
+{\info
+{\title Reproducible Research - Course Project 1}
+{\author Eric FRIGOT}}\paperw12240\paperh15840\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl820\sa200\partightenfactor0
+
+\f0\fs76 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Reproducible Research - Course Project 1\
+\pard\pardeftab720\sl380\sa200\partightenfactor0
+
+\f1\i\fs36 \cf2 Mathias Stein
+\f0\i0 \
+\pard\pardeftab720\sl660\sa200\partightenfactor0
+
+\fs60 \cf2 Total number of steps taken per day\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb3 activity <- read.csv("activity.csv", sep = ",")\
+merged_by_day <- activity[which(activity$steps >= 0), ]\
+merged_by_day <- merged_by_day %>% group_by(date) %>% summarise(steps = sum(steps))\
+merged_by_day <- as.data.frame(merged_by_day)\
+merged_by_day$date <- as.Date(merged_by_day$date)\
+\
+ggplot(merged_by_day, aes(x = date, y = steps)) + \
+  geom_bar(stat = "identity") +\
+  theme_bw()\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 {{\NeXTGraphic Unbekannt.png \width10080 \height7200
+}¬}\pard\pardeftab720\sl400\sa200\partightenfactor0
+\cf2 \
+Mean of the total number of steps taken per day :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 10766.19\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 Median of the total number of steps taken per day :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 10765\
+\pard\pardeftab720\sl660\sa200\partightenfactor0
+
+\f0\fs60 \cf2 \cb1 Average daily activity pattern\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb3 activity <- read.csv("activity.csv", sep = ",")\
+merged_by_interval <- activity[which(activity$steps >= 0), ]\
+merged_by_interval <- merged_by_interval %>% group_by(interval) %>% summarise(steps = sum(steps))\
+merged_by_interval <- as.data.frame(merged_by_interval)\
+merged_by_interval <- merged_by_interval[which(merged_by_interval$steps >= 0), ]\
+\
+ggplot(merged_by_interval, aes(x = interval, y = steps)) + \
+  geom_line() +\
+  theme_bw()\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 {{\NeXTGraphic 1__#$!@%!#__Unbekannt.png \width10080 \height7200
+}¬}\
+The 5-minute interval, on average across all the days in the dataset, which contains the maximum number of steps is :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 835\
+\pard\pardeftab720\sl660\sa200\partightenfactor0
+
+\f0\fs60 \cf2 \cb1 Imputing missing values\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 Total number of missing values in the dataset\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 2304\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 Those missing values will be filled by the mean for the 5-minute interval for all the data collected. Here is the code :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb3 activity <- read.csv("activity.csv", sep = ",")\
+clean_activity <- activity\
+\
+for (i in which(sapply(clean_activity, is.numeric))) \{\
+    for (j in which(is.na(clean_activity[, i]))) \{\
+        clean_activity[j, i] <- mean(clean_activity[clean_activity[, "interval"] == clean_activity[j, "interval"], i],  na.rm = TRUE)\
+    \}\
+\}\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 Here is the new histogram with missing values replaced by mean :\
+{{\NeXTGraphic Unbekannt.png \width10080 \height7200
+}¬}\
+New Mean of the total number of steps taken per day :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 10766.19\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 New Median of the total number of steps taken per day :\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb4 ## [1] 10765\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 We can see that both histogram are the same. Inputting values based on the mean will necessarly produce the same mean.\
+\pard\pardeftab720\sl660\sa200\partightenfactor0
+
+\f0\fs60 \cf2 Differences in activity patterns between weekdays and weekends\
+\pard\pardeftab720\sl360\partightenfactor0
+
+\f2\fs26 \cf2 \cb3 clean_activity$date <- as.Date(clean_activity$date)\
+clean_activity$week = ifelse(weekdays(clean_activity$date) == "Saturday" | weekdays(clean_activity$date) == "Sunday", "weekend", "weekday")\
+clean_activity$week = as.factor(clean_activity$week)\
+merged_by_interval <- clean_activity %>% group_by(interval, week) %>% summarise(steps = sum(steps))\
+merged_by_interval <- as.data.frame(merged_by_interval)\
+xyplot(steps ~ interval | week, data = merged_by_interval, layout = c(1,2), type = "l")\
+\pard\pardeftab720\sl400\sa200\partightenfactor0
+
+\f3\fs28 \cf2 \cb1 {{\NeXTGraphic 2__#$!@%!#__Unbekannt.png \width10080 \height7200
+}¬}\
+}
